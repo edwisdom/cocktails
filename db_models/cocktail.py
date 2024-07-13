@@ -23,6 +23,8 @@ class Ingredients(Base):
     brix_in_percent = Column(Integer, nullable=True)
     description = Column(String, nullable=True)
 
+    recipes = relationship("RecipeIngredients", back_populates="ingredient")
+
 
 class Youtubers(Base):
     __tablename__ = "youtubers"
@@ -73,7 +75,8 @@ class Recipes(Base):
     method = Column(String, nullable=True)
 
     cocktail = relationship("Cocktails")
-    source = relationship("Sources")
+    recipes = relationship("Recipes", back_populates="source")
+    ingredients = relationship("RecipeIngredients", back_populates="recipe")
 
 
 class MeasuringUnits(Base):
@@ -91,8 +94,8 @@ class RecipeIngredients(Base):
     quantity = Column(Float, nullable=False)
     unit_id = Column(Integer, ForeignKey("measuring_units.id"), nullable=False)
 
-    recipe = relationship("Recipes")
-    ingredient = relationship("Ingredients")
+    recipe = relationship("Recipes", back_populates="ingredients")
+    ingredient = relationship("Ingredients", back_populates="recipes")
     unit = relationship("MeasuringUnits")
 
 
@@ -103,6 +106,7 @@ class Bartenders(Base):
     school_id = Column(Integer, ForeignKey("bartending_schools.id"), nullable=True)
 
     school = relationship("BartendingSchools")
+    recipes = relationship("Recipes", back_populates="bartender")
 
 
 class BartendingSchools(Base):
@@ -110,6 +114,9 @@ class BartendingSchools(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     description = Column(String, nullable=True)
+
+    bartenders = relationship("Bartenders", back_populates="school")
+    bars = relationship("Bars", back_populates="school")
 
 
 class Bars(Base):
