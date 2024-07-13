@@ -10,13 +10,18 @@ class RecipeSourceType(Enum):
     youtube_video = "youtube_video"
 
 
+class UnitType(Enum):
+    weight = "weight"
+    volume = "volume"
+
+
 class Ingredients(Base):
     __tablename__ = "ingredients"
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    abv_in_percent = Column(Integer, nullable=False)
-    brix_in_percent = Column(Integer, nullable=False)
-    description = Column(String, nullable=False)
+    abv_in_percent = Column(Integer, nullable=True)
+    brix_in_percent = Column(Integer, nullable=True)
+    description = Column(String, nullable=True)
 
 
 class Youtubers(Base):
@@ -25,7 +30,7 @@ class Youtubers(Base):
     channel_id = Column(Integer, nullable=False)
     full_name = Column(String, nullable=False)
     channel_name = Column(String, nullable=False)
-    description = Column(String, nullable=False)
+    description = Column(String, nullable=True)
 
 
 class YouTubeVideos(Base):
@@ -33,7 +38,7 @@ class YouTubeVideos(Base):
     source_id = Column(Integer, ForeignKey("sources.id"), primary_key=True)
     youtuber_id = Column(Integer, ForeignKey("youtubers.id"), nullable=False)
     name = Column(String, nullable=False)
-    description = Column(String, nullable=False)
+    description = Column(String, nullable=True)
 
     source = relationship("Sources", back_populates="youtube_video")
     youtuber = relationship("Youtubers")
@@ -43,7 +48,7 @@ class Cocktails(Base):
     __tablename__ = "cocktails"
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    description = Column(String, nullable=False)
+    description = Column(String, nullable=True)
 
 
 class Sources(Base):
@@ -64,8 +69,8 @@ class Recipes(Base):
     id = Column(Integer, primary_key=True)
     cocktail_id = Column(Integer, ForeignKey("cocktails.id"), nullable=False)
     source_id = Column(Integer, ForeignKey("sources.id"), nullable=False)
-    abv_in_percent = Column(Integer, nullable=False)
-    method = Column(String, nullable=False)
+    abv_in_percent = Column(Integer, nullable=True)
+    method = Column(String, nullable=True)
 
     cocktail = relationship("Cocktails")
     source = relationship("Sources")
@@ -75,7 +80,8 @@ class MeasuringUnits(Base):
     __tablename__ = "measuring_units"
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    num_mls = Column(Float, nullable=False)
+    unit_type = Column(Enum(UnitType), nullable=False)
+    num_mls_or_gs = Column(Float, nullable=False)
 
 
 class RecipeIngredients(Base):
@@ -94,7 +100,7 @@ class Bartenders(Base):
     __tablename__ = "bartenders"
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    school_id = Column(Integer, ForeignKey("bartending_schools.id"), nullable=False)
+    school_id = Column(Integer, ForeignKey("bartending_schools.id"), nullable=True)
 
     school = relationship("BartendingSchools")
 
@@ -103,17 +109,17 @@ class BartendingSchools(Base):
     __tablename__ = "bartending_schools"
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    description = Column(String, nullable=False)
+    description = Column(String, nullable=True)
 
 
 class Bars(Base):
     __tablename__ = "bars"
     source_id = Column(Integer, ForeignKey("sources.id"), primary_key=True)
     name = Column(String, nullable=False)
-    description = Column(String, nullable=False)
-    address = Column(String, nullable=False)
-    city_id = Column(Integer, ForeignKey("cities.id"), nullable=False)
-    school_id = Column(Integer, ForeignKey("bartending_schools.id"), nullable=False)
+    description = Column(String, nullable=True)
+    address = Column(String, nullable=True)
+    city_id = Column(Integer, ForeignKey("cities.id"), nullable=True)
+    school_id = Column(Integer, ForeignKey("bartending_schools.id"), nullable=True)
 
     source = relationship("Sources", back_populates="bar")
     city = relationship("Cities")
