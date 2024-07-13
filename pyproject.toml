@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "cocktails"
+version = "0.1.0"
+description = "This is an app backend that retrieves, stores, and serves cocktail recipes."
+authors = ["edwisdom <22333941+edwisdom@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.12"
+aiohttp = "3.9.1"
+pydantic = "2.6.1"
+google-api-python-client = "2.125.0"
+google-auth-oauthlib = "1.2.0"
+google-auth-httplib2 = "0.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
